@@ -16,11 +16,21 @@ public class ArithmeticCode {
         double left = 0;
         double right = 1;
 
+        char letter = '-';
+
+        System.out.println("Symbol left right\n------------");
+
         for (int i = 0; i < s.length(); i++) {
+
+            System.out.println(letter + " " + left + " " + right);
+            System.out.println("------------");
+
             char symb = s.charAt(i);
             double newRight = left + (right - left) * segment.get(symb).getRight();
             left = left + (right - left) * segment.get(symb).getLeft();
             right = newRight;
+            
+            letter = symb;
         }
 
         return (left + right) / 2;
@@ -28,20 +38,14 @@ public class ArithmeticCode {
 
     public static HashMap<Character, Segment> defineSegments(String s) {
         HashMap<Character, Double> map = getProbability(s);
-        Segment[] segment = new Segment[map.size()];
 
         HashMap<Character, Segment> segmentMap = new HashMap<>();
 
         double l = 0;
-
-        int i = 0;
         for (Map.Entry<Character, Double> entry: map.entrySet()) {
-            segment[i] = new Segment();
-            segment[i].setLeft(l);
-            segment[i].setRight(l + entry.getValue());
-            l = segment[i].getRight();
-            segmentMap.put(entry.getKey(), segment[i]);
-            i++;
+            Segment segment = new Segment(l, l + entry.getValue());
+            l = segment.getRight();
+            segmentMap.put(entry.getKey(), segment);
         }
 
         return segmentMap;
